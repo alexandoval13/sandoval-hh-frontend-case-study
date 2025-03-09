@@ -5,6 +5,8 @@ export enum System {
   CELSIUS,
 }
 
+export const systemDefinition = [{ label: '°F' }, { label: '°C' }];
+
 export const facilities: Array<Facility> = [
   {
     id: 1,
