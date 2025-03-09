@@ -42,7 +42,7 @@ const ListView = ({
             handleChange={handleSearchChange}
             handleClear={handleClear}
             enableIcon
-            placeholder="Facility or City Name"
+            placeholder="facility, city, state abbr..."
             enableClear={searchValue?.length > 0}
           />
         )}

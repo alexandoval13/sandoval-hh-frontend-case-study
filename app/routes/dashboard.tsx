@@ -6,6 +6,7 @@ import ListView from '~/components/Dashboard/ListView';
 
 import { type RootState } from '~/redux/store';
 import { type FacilityLocation } from '~/types/facility';
+import useDebounce from '~/hooks/useDebounce';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -23,16 +24,19 @@ export default function Dashboard() {
   const [filteredFacilitiesWithWeather, setFilteredFacilitiesWithWeather] =
     useState<FacilityLocation[]>([]);
 
+  const debouncedSearch = useDebounce(searchValue, 300);
   useEffect(() => {
-    const results = facilitiesWithWeather.filter(
-      (facility) =>
-        facility.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-        facility.location?.city
-          ?.toLowerCase()
-          .includes(searchValue.toLowerCase())
-    );
-    setFilteredFacilitiesWithWeather(results);
-  }, [searchValue]);
+    if (debouncedSearch) {
+      const results = facilitiesWithWeather.filter(
+        (facility) =>
+          facility.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+          facility.location?.city
+            ?.toLowerCase()
+            .includes(searchValue.toLowerCase())
+      );
+      setFilteredFacilitiesWithWeather(results);
+    }
+  }, [debouncedSearch]);
 
   const handleClear = () => {
     setSearchValue('');
@@ -46,7 +50,6 @@ export default function Dashboard() {
     ? filteredFacilitiesWithWeather
     : facilitiesWithWeather;
 
-  console.log({ filteredFacilitiesWithWeather, facilitiesWithWeather });
   return (
     <div>
       <ListView
