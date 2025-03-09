@@ -14,7 +14,7 @@ export const facilities: Array<Facility> = [
     currentTemp: 67,
     targetTemp: 62.5,
     system: System.FARENHEIT,
-    placeId: 1,
+    locationId: 1,
   },
   {
     id: 11,
@@ -22,7 +22,7 @@ export const facilities: Array<Facility> = [
     currentTemp: 67,
     targetTemp: 62.5,
     system: System.FARENHEIT,
-    placeId: 1,
+    locationId: 1,
   },
   {
     id: 12,
@@ -30,7 +30,7 @@ export const facilities: Array<Facility> = [
     currentTemp: 67,
     targetTemp: 62.5,
     system: System.FARENHEIT,
-    placeId: 2,
+    locationId: 2,
   },
   {
     id: 13,
@@ -38,7 +38,7 @@ export const facilities: Array<Facility> = [
     currentTemp: 67,
     targetTemp: 62.5,
     system: System.FARENHEIT,
-    placeId: 3,
+    locationId: 3,
   },
   {
     id: 15,
@@ -46,6 +46,6 @@ export const facilities: Array<Facility> = [
     currentTemp: 67,
     targetTemp: 62.5,
     system: System.FARENHEIT,
-    placeId: 4,
+    locationId: 4,
   },
 ];

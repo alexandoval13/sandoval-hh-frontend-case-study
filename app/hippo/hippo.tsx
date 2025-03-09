@@ -1,63 +1,18 @@
-import { useEffect, useState } from 'react';
-import { type Place } from '../types/places';
-import { type CurrentWeather } from '../types/weather';
-
-const places: Array<Place> = [
-  {
-    city: 'Pescadero, CA',
-    lat: 37.2552,
-    lon: -122.3839,
-    weather: null,
-  },
-  {
-    city: 'Tabernacle, NJ',
-    lat: 39.847,
-    lon: -74.7346,
-    weather: null,
-  },
-  {
-    city: 'Petaluma, CA',
-    lat: 38.2324,
-    lon: -122.6367,
-    weather: null,
-  },
-  {
-    city: 'Sunnyslope, WA',
-    lat: 47.4729,
-    lon: -120.3367,
-    weather: null,
-  },
-];
+import { useState } from 'react';
+import { type Location } from '../types/location';
+import { locations } from 'db/locations';
+// import { fetchWeatherData } from 'api/weatherAPI';
+import { useWeatherData } from '~/hooks/useWeatherData';
 
 export function Hippo() {
-  const [currentPlaces, setCurrentPlaces] = useState<Array<Place>>(places);
+  const [currentLocations, setCurrentLocations] =
+    useState<Array<Location>>(locations);
 
-  useEffect(() => {
-    const fetchWeather = async (place: Place): Promise<CurrentWeather> => {
-      const apiKey = import.meta.env.VITE_REACT_APP_OPENWEATHERMAP_API_KEY;
-      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${place.lat}&lon=${place.lon}&units=imperial&appid=${apiKey}`;
-      console.log(url);
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      return data;
-    };
-
-    const fetchAllWeather = async () => {
-      const updatedPlaces = await Promise.all(
-        currentPlaces.map(async (place) => {
-          const weather = await fetchWeather(place);
-          return { ...place, weather };
-        })
-      );
-      setCurrentPlaces(updatedPlaces);
-      console.log({ updatedPlaces });
-    };
-
-    fetchAllWeather();
-  }, []);
+  const {
+    loading,
+    error,
+    data: updatedLocations,
+  } = useWeatherData({ currentLocations });
 
   return (
     <main className="flex items-center justify-center pt-16 pb-4">
@@ -77,19 +32,20 @@ export function Hippo() {
               An Example API Call
             </p>
             <ul>
-              {currentPlaces.map((place) => (
-                <li
-                  key={place.city}
-                  className="flex items-center justify-between"
-                >
-                  <span>{place.city}</span>
-                  <span>
-                    {place.weather
-                      ? `${place.weather.main.temp} °C`
-                      : 'Loading...'}
-                  </span>
-                </li>
-              ))}
+              {updatedLocations &&
+                updatedLocations.map((Location) => (
+                  <li
+                    key={Location.city}
+                    className="flex items-center justify-between"
+                  >
+                    <span>{Location.city}</span>
+                    <span>
+                      {Location.weather
+                        ? `${Location.weather.main.temp} °C` // TODO: conditional rendering
+                        : 'Loading...'}
+                    </span>
+                  </li>
+                ))}
             </ul>
             <a
               href="https://openweathermap.org/current"

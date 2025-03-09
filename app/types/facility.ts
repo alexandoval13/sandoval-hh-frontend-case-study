@@ -1,5 +1,6 @@
 import type { System } from 'db/facilities';
-import type { Place } from './place';
+import type { Location } from './location';
+import type { CurrentWeather } from './weather';
 
 export interface Facility {
   id: string | number;
@@ -7,9 +8,10 @@ export interface Facility {
   currentTemp: number;
   targetTemp: number;
   system: System;
-  placeId: string | number;
+  locationId: string | number;
 }
 
 export interface FacilityLocation extends Facility {
-  place: Place | null;
+  location: Location | null;
+  weather: CurrentWeather;
 }

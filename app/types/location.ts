@@ -1,6 +1,6 @@
 import { type CurrentWeather } from './weather';
 
-export interface Place {
+export interface Location {
   id: string | number;
   city: string;
   lat: number;

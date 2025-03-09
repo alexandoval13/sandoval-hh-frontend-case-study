@@ -1,6 +1,6 @@
-import type { Place } from '~/types/place';
+import type { Location } from '~/types/location';
 
-export const places: Array<Place> = [
+export const locations: Array<Location> = [
   {
     id: 1,
     city: 'Pescadero, CA',

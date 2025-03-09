@@ -1,16 +1,11 @@
+import { useDispatch, useSelector } from 'react-redux';
 import type { Route } from './+types/home';
-import { useEffect, useMemo, useState } from 'react';
-
-import { places } from 'db/places';
-import { facilities } from 'db/facilities';
-
-import { useWeatherData } from '~/hooks/useWeatherData';
-
-import type { Place } from '~/types/place';
-import type { Facility, FacilityLocation } from '~/types/facility';
-
+import { useEffect, useState } from 'react';
 import FacilityCard from '~/components/Dashboard/FacilityCard';
 import ListView from '~/components/Dashboard/ListView';
+
+import { type RootState } from '~/redux/store';
+import { type FacilityLocation } from '~/types/facility';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -20,61 +15,38 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Dashboard() {
-  const [currentPlaces, setCurrentPlaces] = useState<Place[]>(places); // TODO: places
-  const [currentFacilities, setCurrentFacilities] =
-    useState<Facility[]>(facilities);
-
-  const [facilityLocations, setFacilityLocations] = useState<
-    FacilityLocation[]
-  >([]);
-  const [filteredList, setFilteredList] = useState<FacilityLocation[] | null>(
-    null
+  const facilitiesWithWeather = useSelector(
+    (state: RootState) => state.facilityWeather.data
   );
 
   const [searchValue, setSearchValue] = useState<string>('');
+  const [filteredFacilitiesWithWeather, setFilteredFacilitiesWithWeather] =
+    useState<FacilityLocation[]>([]);
 
-  const {
-    loading,
-    error,
-    data: updatedPlaces,
-  } = useWeatherData({
-    currentPlaces,
-  });
-
-  useMemo(() => {
-    // TODO: may not need to transform all data into state at this level, but pass into child components on iteration
-    let placeMap = new Map();
-    updatedPlaces?.forEach((place, i) => placeMap.set(place.id, i));
-
-    let updatedFacilityLoations = currentFacilities.map((facility) => ({
-      ...facility,
-      place: updatedPlaces?.[placeMap.get(facility.placeId)] || null,
-    }));
-
-    setFacilityLocations(updatedFacilityLoations);
-  }, [updatedPlaces, currentFacilities]);
-
-  useMemo(() => {
-    // todo: optimize search
-    if (searchValue) {
-      let list = facilityLocations.filter(
-        (facility) =>
-          facility.name.toLowerCase().includes(searchValue) ||
-          facility.place?.city.toLowerCase().includes(searchValue)
-      );
-      setFilteredList(list);
-    }
-  }, [searchValue, facilityLocations]);
+  useEffect(() => {
+    const results = facilitiesWithWeather.filter(
+      (facility) =>
+        facility.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+        facility.location?.city
+          ?.toLowerCase()
+          .includes(searchValue.toLowerCase())
+    );
+    setFilteredFacilitiesWithWeather(results);
+  }, [searchValue]);
 
   const handleClear = () => {
     setSearchValue('');
-    setFilteredList(null);
   };
 
   const handleSearch = (value: string) => {
     setSearchValue(value.toLowerCase());
   };
 
+  const list = searchValue
+    ? filteredFacilitiesWithWeather
+    : facilitiesWithWeather;
+
+  console.log({ filteredFacilitiesWithWeather, facilitiesWithWeather });
   return (
     <div>
       <ListView
@@ -84,7 +56,7 @@ export default function Dashboard() {
         handleSearch={handleSearch}
         searchValue={searchValue}
       >
-        {(filteredList || facilityLocations).map((location) => {
+        {list.map((location) => {
           return (
             <FacilityCard
               key={`facility-card::${location.id}`}

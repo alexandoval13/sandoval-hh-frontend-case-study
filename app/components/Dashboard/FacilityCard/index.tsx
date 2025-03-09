@@ -23,11 +23,13 @@ const FacilityCard = ({ facility }: FacilityCardProps) => {
         </div>
       </div>
 
-      {facility.place ? (
+      {facility.location ? (
         <div className="flex flex-row items-center">
-          <div className="basis-3/4 text-sm italic">{facility.place.city}</div>
+          <div className="basis-3/4 text-sm italic">
+            {facility.location.city}
+          </div>
           <div className="basis-1/4 text-sm text-end">
-            {facility.place.weather?.main.temp}
+            {facility.weather?.main.temp}
             {systemDefinition[system].label}
           </div>
         </div>
