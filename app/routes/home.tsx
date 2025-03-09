@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { fetchWeatherData } from '~/redux/weatherSlice';
 import { processFacilities } from '~/redux/formattedFacilityWeatherSlice';
 import Dashboard from './dashboard';
+import AutoRefetch from '~/components/AutoRefetch';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -48,5 +49,27 @@ export default function Home() {
       );
     }
   }, [weather, dispatch]);
-  return <Dashboard />;
+
+  // useEffect(() => {
+  //   const worker = new Worker(new URL('../refreshWorker.js', import.meta.url));
+
+  //   worker.onmessage = (event) => {
+  //     dispatch(fetchWeatherData());
+  //   };
+
+  //   worker.onerror = (error) => {
+  //     console.error('Worker error:', error);
+  //   };
+
+  //   return () => {
+  //     worker.terminate(); // Clean up the worker on component unmount
+  //   };
+  // }, []);
+
+  return (
+    <>
+      <AutoRefetch />
+      <Dashboard />
+    </>
+  );
 }

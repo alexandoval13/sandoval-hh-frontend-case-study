@@ -37,7 +37,14 @@ const initialState: InitialStateType = {
 const weatherSlice = createSlice({
   name: 'weather',
   initialState,
-  reducers: {},
+  reducers: {
+    updateWeatherData: (state, action) => {
+      console.log({ data: action.payload });
+      action.payload.forEach(({ locationId, weather }) => {
+        state.data[locationId] = weather;
+      });
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchWeatherData.pending, (state) => {
@@ -56,4 +63,5 @@ const weatherSlice = createSlice({
   },
 });
 
+export const { updateWeatherData } = weatherSlice.actions;
 export const weatherReducer = weatherSlice.reducer;

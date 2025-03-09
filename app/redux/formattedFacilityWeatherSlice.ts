@@ -26,9 +26,8 @@ const facilityWeatherSlice = createSlice({
       locations.forEach((location: Location, i: string) =>
         locationMap.set(location.id, i)
       );
-      console.log({ locationMap });
+
       const formattedData = facilities.map((facility: Facility) => {
-        console.log({ facilityLocatinID: facility.locationId });
         return {
           ...facility,
           location: locations[locationMap.get(facility.locationId)] || null,
