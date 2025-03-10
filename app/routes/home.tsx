@@ -20,10 +20,10 @@ export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
 
   const locations = useSelector(
-    (state: RootState) => state.databaseData.locations
+    (state: RootState) => state.databaseData.locations.data
   );
   const facilities = useSelector(
-    (state: RootState) => state.databaseData.facilities
+    (state: RootState) => state.databaseData.facilities.data
   );
   const weather = useSelector((state: RootState) => state.weather);
 
@@ -33,38 +33,26 @@ export default function Home() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (locations.status === 'succeeded') {
+    if (locations.length) {
       dispatch(fetchWeatherData());
     }
   }, [locations, dispatch]);
 
   useEffect(() => {
-    if (weather.status === 'succeeded') {
+    if (
+      weather.status === 'succeeded' &&
+      facilities.length &&
+      locations.length
+    ) {
       dispatch(
         processFacilities({
-          facilities: facilities.data,
-          locations: locations.data,
+          facilities: facilities,
+          locations: locations,
           weather,
         })
       );
     }
-  }, [weather, dispatch]);
-
-  // useEffect(() => {
-  //   const worker = new Worker(new URL('../refreshWorker.js', import.meta.url));
-
-  //   worker.onmessage = (event) => {
-  //     dispatch(fetchWeatherData());
-  //   };
-
-  //   worker.onerror = (error) => {
-  //     console.error('Worker error:', error);
-  //   };
-
-  //   return () => {
-  //     worker.terminate(); // Clean up the worker on component unmount
-  //   };
-  // }, []);
+  }, [locations, facilities, weather.status, dispatch]);
 
   return (
     <>

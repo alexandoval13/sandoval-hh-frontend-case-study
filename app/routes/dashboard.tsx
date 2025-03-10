@@ -1,6 +1,6 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import type { Route } from './+types/home';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import FacilityCard from '~/components/Dashboard/FacilityCard';
 import ListView from '~/components/Dashboard/ListView';
 
@@ -17,7 +17,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Dashboard() {
   const facilitiesWithWeather = useSelector(
-    (state: RootState) => state.facilityWeather.data
+    (state: RootState) => state.facilityWeather.data ?? []
   );
 
   const [searchValue, setSearchValue] = useState<string>('');
@@ -27,28 +27,33 @@ export default function Dashboard() {
   const debouncedSearch = useDebounce(searchValue, 300);
   useEffect(() => {
     if (debouncedSearch) {
-      const results = facilitiesWithWeather.filter(
-        (facility) =>
-          facility.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-          facility.location?.city
-            ?.toLowerCase()
-            .includes(searchValue.toLowerCase())
+      setFilteredFacilitiesWithWeather(
+        facilitiesWithWeather.filter(
+          (facility) =>
+            facility.name
+              .toLowerCase()
+              .includes(debouncedSearch.toLowerCase()) ||
+            facility.location?.city
+              ?.toLowerCase()
+              .includes(debouncedSearch.toLowerCase())
+        )
       );
-      setFilteredFacilitiesWithWeather(results);
+    } else {
+      setFilteredFacilitiesWithWeather(facilitiesWithWeather);
     }
-  }, [debouncedSearch]);
+  }, [debouncedSearch, facilitiesWithWeather]);
 
   const handleClear = () => {
     setSearchValue('');
   };
 
   const handleSearch = (value: string) => {
-    setSearchValue(value.toLowerCase());
+    setSearchValue(value);
   };
 
-  const list = searchValue
-    ? filteredFacilitiesWithWeather
-    : facilitiesWithWeather;
+  const list = useMemo(() => {
+    return searchValue ? filteredFacilitiesWithWeather : facilitiesWithWeather;
+  }, [searchValue, filteredFacilitiesWithWeather, facilitiesWithWeather]);
 
   return (
     <div>

@@ -27,15 +27,11 @@ const facilityWeatherSlice = createSlice({
         locationMap.set(location.id, i)
       );
 
-      const formattedData = facilities.map((facility: Facility) => {
-        return {
-          ...facility,
-          location: locations[locationMap.get(facility.locationId)] || null,
-          weather: weather.data[facility.locationId] || null,
-        };
-      });
-
-      state.data = formattedData;
+      state.data = facilities.map((facility: Facility) => ({
+        ...facility,
+        location: locations[locationMap.get(facility.locationId)] || null,
+        weather: weather.data[facility.locationId] || null,
+      }));
     },
   },
 });

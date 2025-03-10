@@ -39,7 +39,6 @@ const weatherSlice = createSlice({
   initialState,
   reducers: {
     updateWeatherData: (state, action) => {
-      console.log({ data: action.payload });
       action.payload.forEach(({ locationId, weather }) => {
         state.data[locationId] = weather;
       });

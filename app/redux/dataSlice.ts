@@ -34,7 +34,15 @@ const initialState: InitialStateType = {
 const dataSlice = createSlice({
   name: 'database',
   initialState,
-  reducers: {},
+  reducers: {
+    updateFacility: (state, action) => {
+      const facility = action.payload;
+
+      state.facilities.data = state.facilities.data.map((f) =>
+        f.id === facility.id ? facility : f
+      );
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchFacilitiesData.pending, (state) => {
@@ -61,5 +69,7 @@ const dataSlice = createSlice({
       });
   },
 });
+
+export const { updateFacility } = dataSlice.actions;
 
 export const databaseReducer = dataSlice.reducer;
