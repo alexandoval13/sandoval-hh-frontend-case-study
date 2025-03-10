@@ -42,6 +42,16 @@ const dataSlice = createSlice({
         f.id === facility.id ? facility : f
       );
     },
+    addNewFacility: (state, action) => {
+      const facility = action.payload;
+
+      state.facilities.data.push(facility);
+    },
+    addNewLocation: (state, action) => {
+      const location = action.payload;
+
+      state.locations.data.push(location);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -70,6 +80,7 @@ const dataSlice = createSlice({
   },
 });
 
-export const { updateFacility } = dataSlice.actions;
+export const { updateFacility, addNewFacility, addNewLocation } =
+  dataSlice.actions;
 
 export const databaseReducer = dataSlice.reducer;

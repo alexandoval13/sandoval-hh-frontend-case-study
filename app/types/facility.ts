@@ -5,7 +5,7 @@ import type { CurrentWeather } from './weather';
 export interface Facility {
   id: string | number;
   name: string;
-  currentTemp: number;
+  currentTemp: number | null;
   targetTemp: number;
   system: System;
   locationId: string | number;

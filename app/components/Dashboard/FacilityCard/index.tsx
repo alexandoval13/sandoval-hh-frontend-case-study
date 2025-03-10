@@ -18,8 +18,14 @@ const FacilityCard = ({ facility }: FacilityCardProps) => {
    */
   const [targetTempDropdownOpen, setTargetTempDropdownOpen] =
     useState<boolean>(false);
-  const [system, setSystem] = useState<System>(System.FARENHEIT);
-  const { name, targetTemp, currentTemp, location, weather } = facility;
+
+  const {
+    name = 'Unknown Facility',
+    targetTemp = '--',
+    currentTemp = '--',
+    location,
+    weather,
+  } = facility ?? {};
 
   const handleClickTargetTemp = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -36,7 +42,7 @@ const FacilityCard = ({ facility }: FacilityCardProps) => {
     for (let i = 100; i >= 45; i--) {
       numbers.push({
         value: i,
-        label: `${i} ${systemDefinition[system].label}`,
+        label: `${i} ${systemDefinition[System.FARENHEIT].label}`,
       });
     }
     return numbers;
@@ -51,13 +57,17 @@ const FacilityCard = ({ facility }: FacilityCardProps) => {
       <div className="flex flex-row items-center">
         <h1 className="basis-5/8 text-[18px]">{name}</h1>
         <div className="basis-3/8 flex flex-row items-center">
-          <h1 className="basis-1/2 text-[20px] text-right">{`${currentTemp}${systemDefinition[system].label}`}</h1>
+          <h1 className="basis-1/2 text-[20px] text-right">{`${currentTemp}${
+            systemDefinition[System.FARENHEIT].label
+          }`}</h1>
           <div className="relative inline-block basis-1/2">
             <button
               className="w-full"
               onClick={(e) => handleClickTargetTemp(e)}
             >
-              <h6 className="text-sm underline text-right">{`${targetTemp} ${systemDefinition[system].label}`}</h6>
+              <h6 className="text-sm underline text-right">{`${targetTemp} ${
+                systemDefinition[System.FARENHEIT].label
+              }`}</h6>
             </button>
             {targetTempDropdownOpen && (
               <div
@@ -80,10 +90,12 @@ const FacilityCard = ({ facility }: FacilityCardProps) => {
 
       {location ? (
         <div className="flex flex-row items-center">
-          <h4 className="basis-3/4 text-sm italic">{location.city}</h4>
+          <h4 className="basis-3/4 text-sm italic">
+            {location.city + ', ' + location.state}
+          </h4>
           <h4 className="basis-1/4 text-sm text-end">
             {weather?.main.temp}
-            {systemDefinition[system].label}
+            {systemDefinition[System.FARENHEIT].label}
           </h4>
         </div>
       ) : (

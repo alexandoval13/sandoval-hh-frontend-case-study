@@ -7,11 +7,17 @@ export const fetchWeatherData = createAsyncThunk(
   'weather/fetchWeather',
   async (_, { getState }) => {
     const state = getState() as RootState;
+
     const locations = state.databaseData.locations.data;
 
     const weatherData = await Promise.all(
       locations.map(async (location) => {
-        const data = await fetchWeather(location.lat, location.lon);
+        const data = await fetchWeather({
+          lat: location.lat,
+          lon: location.lon,
+          city: location.city,
+          state: location.state,
+        });
         return { locationId: location.id, weather: data };
       })
     );

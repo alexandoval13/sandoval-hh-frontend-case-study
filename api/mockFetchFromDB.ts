@@ -1,12 +1,13 @@
 import { locations } from 'db/locations';
 import { facilities } from 'db/facilities';
 
+// mocking db queries  here
 export const fetchLocations = async () => {
-  const data = locations; // mocking a fetch here
+  const data = locations;
   return data;
 };
 
 export const fetchFacilities = async () => {
-  const data = facilities; // mocking a fetch here
+  const data = facilities;
   return data;
 };

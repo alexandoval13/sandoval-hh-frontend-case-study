@@ -7,6 +7,7 @@ import ListView from '~/components/Dashboard/ListView';
 import { type RootState } from '~/redux/store';
 import { type FacilityLocation } from '~/types/facility';
 import useDebounce from '~/hooks/useDebounce';
+import AddFacilityForm from '~/components/Form';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -57,6 +58,7 @@ export default function Dashboard() {
 
   return (
     <div>
+      <AddFacilityForm />
       <ListView
         title={'Facilities'}
         search

@@ -16,7 +16,7 @@ const AutoRefetch = () => {
       );
 
       worker.postMessage({
-        interval: 30000,
+        interval: 500000,
         locations,
         apiKey: import.meta.env.VITE_REACT_APP_OPENWEATHERMAP_API_KEY,
       }); // Refresh every 5 min
