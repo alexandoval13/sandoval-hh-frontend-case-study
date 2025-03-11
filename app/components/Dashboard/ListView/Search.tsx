@@ -1,4 +1,4 @@
-import React, { useEffect, useState, type EventHandler } from 'react';
+import React from 'react';
 import SearchIcon from '~/assets/icons/searchIcon';
 
 type SearchProps = {

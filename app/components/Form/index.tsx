@@ -1,29 +1,12 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
 
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '~/redux/store';
 import { addNewFacility, addNewLocation } from '~/redux/dataSlice';
 import { System, systemDefinition } from 'db/facilities';
-import type { Location } from '~/types/location';
 import type { Facility } from '~/types/facility';
-
-const AddFacilitySchema = Yup.object().shape({
-  name: Yup.string().required('Facility name is required'),
-  targetTemp: Yup.number()
-    .min(45, 'Target temperature must be at least 45')
-    .max(100, 'Target temperature must be at most 100')
-    .required('Target temperature is required'),
-  city: Yup.string().required(
-    'City is required when latitude and longitude are not provided'
-  ),
-  lat: Yup.number()
-    .min(-90, 'Latitude must be between -90 and 90')
-    .max(90, 'Latitude must be between -90 and 90'),
-  lon: Yup.number()
-    .min(-180, 'Longitude must be between -180 and 180')
-    .max(180, 'Longitude must be between -180 and 180'),
-});
+import { useNavigate } from 'react-router';
+import { AddFacilitySchema } from './AddFacilityFormSchema';
 
 type FormValues = {
   name: string;
@@ -35,36 +18,47 @@ type FormValues = {
 };
 
 type AddFacilityFormType = {
-  handleClose: () => void;
+  handleClose?: () => void;
 };
 
 const AddFacilityForm = ({ handleClose }: AddFacilityFormType) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const locations = useSelector(
     (state: RootState) => state.databaseData.locations.data
   );
 
   const initialValues: FormValues = {
-    name: 'test',
+    name: 'Bend Nursery',
     targetTemp: '65',
-    city: 'bend',
-    state: 'or',
-    lat: '',
-    lon: '',
+    city: 'Bend',
+    state: 'OR',
+    lat: '44.0582',
+    lon: '-121.3153',
   };
 
-  const handleOnSubmit = (values: FormValues) => {
-    let location: Location = locations.find(
-      (loc) => loc.lat === Number(values.lat) && loc.lon === Number(values.lon)
-    ) || {
-      id: Math.floor(Math.random() * 100),
-      city: values.city,
-      state: values.state.toUpperCase(),
-      lat: Number(values.lat),
-      lon: Number(values.lon),
-      weather: null,
-    };
-    dispatch(addNewLocation(location));
+  const handleOnSubmit = (values: FormValues, { resetForm }: any) => {
+    let location = locations.find(
+      (loc) =>
+        loc.lat &&
+        loc.lon &&
+        loc.lat === Number(values.lat) &&
+        loc.lon === Number(values.lon)
+    );
+
+    if (!location) {
+      location = {
+        id: Math.floor(Math.random() * 100),
+        city: values.city,
+        state: values.state.toUpperCase(),
+        lat: Number(values.lat),
+        lon: Number(values.lon),
+        weather: null,
+      };
+      dispatch(addNewLocation(location));
+    } else {
+      console.log('Matched to existing location!:\n', location);
+    }
 
     let newFacility: Facility = {
       id: Math.random() * 100,
@@ -77,7 +71,11 @@ const AddFacilityForm = ({ handleClose }: AddFacilityFormType) => {
 
     dispatch(addNewFacility(newFacility));
 
-    handleClose();
+    resetForm();
+
+    navigate(`/facility?id=${newFacility.id}`);
+
+    if (handleClose) handleClose();
   };
 
   const inputStyles =
@@ -87,7 +85,9 @@ const AddFacilityForm = ({ handleClose }: AddFacilityFormType) => {
     <Formik
       initialValues={initialValues}
       validationSchema={AddFacilitySchema}
-      onSubmit={(values, { setSubmitting }) => handleOnSubmit(values)}
+      onSubmit={(values, { resetForm }) =>
+        handleOnSubmit(values, { resetForm })
+      }
     >
       {({ isSubmitting }) => (
         <Form>
@@ -197,7 +197,7 @@ const AddFacilityForm = ({ handleClose }: AddFacilityFormType) => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="bg-gray-500 text-white px-4 py-2 rounded"
+            className="bg-gray-500 text-white px-4 py-2 rounded float-end"
           >
             Submit
           </button>

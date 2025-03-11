@@ -48,14 +48,14 @@ export const facilities: Array<Facility> = [
     system: System.FARENHEIT,
     locationId: 4,
   },
-  // {
-  //   id: 152,
-  //   name: 'Sunnyslope Greenhouse',
-  //   currentTemp: 67,
-  //   targetTemp: 62,
-  //   system: System.FARENHEIT,
-  //   locationId: 4,
-  // },
+  {
+    id: 152,
+    name: 'Sunnyslope Greenhouse',
+    currentTemp: 67,
+    targetTemp: 62,
+    system: System.FARENHEIT,
+    locationId: 4,
+  },
   // {
   //   id: 115,
   //   name: 'Sunnyslope Greenhouse',
