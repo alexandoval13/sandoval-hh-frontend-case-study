@@ -17,7 +17,7 @@ export const fetchWeather = async ({
   const url =
     lat && lon
       ? `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKey}`
-      : `https://api.openweathermap.org/data/2.5/weather?q=${city},${state},US&appid=${apiKey}`;
+      : `https://api.openweathermap.org/data/2.5/weather?q=${city},${state},US&units=imperial&appid=${apiKey}`;
 
   const response = await fetch(url);
   if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);

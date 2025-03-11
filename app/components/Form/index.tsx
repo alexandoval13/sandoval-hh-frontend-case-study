@@ -34,7 +34,11 @@ type FormValues = {
   lon: string;
 };
 
-const AddFacilityForm = () => {
+type AddFacilityFormType = {
+  handleClose: () => void;
+};
+
+const AddFacilityForm = ({ handleClose }: AddFacilityFormType) => {
   const dispatch = useDispatch<AppDispatch>();
   const locations = useSelector(
     (state: RootState) => state.databaseData.locations.data
@@ -72,6 +76,8 @@ const AddFacilityForm = () => {
     };
 
     dispatch(addNewFacility(newFacility));
+
+    handleClose();
   };
 
   const inputStyles =
