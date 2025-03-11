@@ -58,7 +58,7 @@ The app includes:
 ### Further Design Details
 
 - [Figma Design File](https://www.figma.com/design/38OqjaVePbSyMsCmIX6NeO/HH-Frontend-Case-Study?node-id=1-2&t=9A7oRQLst2sspaQS-0)
-- [Design Documentation](https://drive.google.com/drive/folders/your-folder-id-here)
+- [Design Documentation](https://docs.google.com/document/d/11vwRmybwjb2FkywiK5DRqf80JeKW2V-4XbDjGnBSCsw/edit?usp=sharing)
 
 ## Getting Started
 
